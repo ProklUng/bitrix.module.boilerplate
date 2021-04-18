@@ -1,0 +1,9 @@
+/.idea/
+/.vscode/
+/*/
+!/tests/
+!/src/
+!/bin/module.create.php
+!/skel/
+/vendor/
+*.cache

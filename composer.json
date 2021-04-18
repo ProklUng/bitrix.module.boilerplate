@@ -1,0 +1,23 @@
+{
+    "name": "proklung/bitrix.module.boilerplate",
+    "description": "Bitrix module for migrations",
+    "type": "bitrix",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/ProklUng/bitrix.module.boilerplate/issues",
+        "source": "https://github.com/ProklUng/bitrix.module.boilerplate"
+    },
+    "authors": [
+        {
+            "name": "Gavrilov Fedy",
+            "email": "fedor.gavrilov.75@mail.ru"
+        }
+    ],
+    "require": {
+        "php": ">=7.3",
+        "composer/installers": "~1"
+    },
+    "autoload": {
+        "psr-4": {"ProklUng\\Module\\Boilerplate\\": "src"}
+    }
+}
