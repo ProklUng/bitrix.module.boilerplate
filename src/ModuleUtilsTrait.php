@@ -18,6 +18,7 @@ use function CopyDirFiles;
  * @since 14.04.2021
  * @since 17.04.2021 Копирование компонентов и файлов при установке. При инсталляции модуля в первую
  * очередь ищется sql файл и только, если он не найден, приступает к сущности.
+ * @since 18.04.2021 Вариативность - где установлен модуль: в папке bitrix или local.
  */
 trait ModuleUtilsTrait
 {
@@ -48,6 +49,12 @@ trait ModuleUtilsTrait
      * Если пусто - таблица не используется.
      */
     protected $MODULE_TABLE_ENTITY = '';
+
+    /**
+     * @var string $MODULE_WHERE_INSTALLED Где - в /bitrix или /local установлен модуль.
+     * Если в local, то нужна задавать эксплицитно.
+     */
+    protected $MODULE_WHERE_INSTALLED = '/bitrix/modules/';
 
     /**
      * Вывод формы админки модуля.
@@ -274,7 +281,7 @@ trait ModuleUtilsTrait
      */
     private function getModuleDir() : string
     {
-        return $_SERVER['DOCUMENT_ROOT']. '/local/modules/' . $this->MODULE_ID;
+        return $_SERVER['DOCUMENT_ROOT']. $this->MODULE_WHERE_INSTALLED . $this->MODULE_ID;
     }
 
     /**
@@ -304,7 +311,7 @@ trait ModuleUtilsTrait
     private function installDbBatch() : ?bool
     {
         global $APPLICATION, $DB;
-        $dbBatchFile = $_SERVER['DOCUMENT_ROOT'].'/local/modules/'.$this->MODULE_ID.'/install/batch/db/'
+        $dbBatchFile = $_SERVER['DOCUMENT_ROOT'] . $this->MODULE_WHERE_INSTALLED . $this->MODULE_ID . '/install/batch/db/'
                        .strtolower($DB->type).'/install.sql';
 
         if (!is_file($dbBatchFile)) {
@@ -336,7 +343,7 @@ trait ModuleUtilsTrait
             return null;
         }
 
-        $dbBatchFile = $_SERVER['DOCUMENT_ROOT'].'/local/modules/'.$this->MODULE_ID
+        $dbBatchFile = $_SERVER['DOCUMENT_ROOT'] . $this->MODULE_WHERE_INSTALLED . $this->MODULE_ID
             .'/install/batch/db/'.strtolower($DB->type).'/uninstall.sql';
 
         if (!is_file($dbBatchFile)) {
