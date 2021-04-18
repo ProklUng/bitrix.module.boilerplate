@@ -1,6 +1,6 @@
 {
     "name": "proklung/bitrix.module.boilerplate",
-    "description": "Bitrix module for migrations",
+    "description": "PHP boilerplate for Bitrix modules",
     "type": "bitrix",
     "license": "MIT",
     "support": {
