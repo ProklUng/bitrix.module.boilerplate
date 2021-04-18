@@ -13,6 +13,7 @@
             "email": "fedor.gavrilov.75@mail.ru"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "php": ">=7.3",
         "composer/installers": "~1"
