@@ -13,10 +13,18 @@
             "email": "fedor.gavrilov.75@mail.ru"
         }
     ],
+    "autoload": {
+        "psr-4": {"ProklUng\\Module\\Boilerplate\\": "src"}
+    },
     "require": {
         "php": ">=7.3"
     },
-    "autoload": {
-        "psr-4": {"ProklUng\\Module\\Boilerplate\\": "src"}
+    "require-dev": {
+        "proklung/bitrix-phpunit-testing-tools": "^1.0"
+    },
+    "extra": {
+        "installer-paths": {
+            "vendor/sheerockoff/bitrix-ci/files/bitrix/modules/{$name}/": ["type:bitrix-module"]
+        }
     }
 }

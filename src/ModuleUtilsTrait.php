@@ -19,6 +19,8 @@ use function CopyDirFiles;
  * @since 17.04.2021 Копирование компонентов и файлов при установке. При инсталляции модуля в первую
  * очередь ищется sql файл и только, если он не найден, приступает к сущности.
  * @since 18.04.2021 Вариативность - где установлен модуль: в папке bitrix или local.
+ *
+ * @property string $MODULE_ID
  */
 trait ModuleUtilsTrait
 {
@@ -77,6 +79,9 @@ trait ModuleUtilsTrait
         return $this->moduleManager;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function doInstall(): void
     {
         ModuleManager::registerModule($this->MODULE_ID);
@@ -86,6 +91,9 @@ trait ModuleUtilsTrait
         $this->InstallEvents();
     }
 
+    /**
+     * @inheritDoc
+     */
     public function doUninstall(): void
     {
         $this->uninstallDB();
@@ -95,6 +103,9 @@ trait ModuleUtilsTrait
         ModuleManager::unRegisterModule($this->MODULE_ID);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function installDB()
     {
         $result = $this->installDbBatch();
@@ -121,6 +132,9 @@ trait ModuleUtilsTrait
         return false;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function uninstallDB()
     {
         $result = $this->uninstallDbBatch();
@@ -133,24 +147,24 @@ trait ModuleUtilsTrait
             return true;
         }
 
-        if (Loader::includeModule($this->MODULE_ID))
-        {
+        if (Loader::includeModule($this->MODULE_ID)) {
             $connection = Application::getInstance()->getConnection();
             try {
                 $connection->dropTable($this->MODULE_TABLE_ENTITY::getTableName());
             } catch (\Exception $e) {
                 // Ошибки типа таблица не найдена - глушатся.
             }
-
         }
+
+        return true;
     }
 
-    public function InstallEvents() {
-
+    public function InstallEvents()
+    {
     }
 
-    public function UnInstallEvents() {
-
+    public function UnInstallEvents()
+    {
     }
 
     /**
@@ -256,6 +270,8 @@ trait ModuleUtilsTrait
      * Рекурсивно удалить папки и файлы в них.
      *
      * @param string $dir Директория.
+     *
+     * @return void
      */
     private function rrmdir(string $dir) : void
     {
@@ -291,7 +307,7 @@ trait ModuleUtilsTrait
      */
     private function getVendor() : string
     {
-        return (string) \substr($this->MODULE_ID, 0, \strpos($this->MODULE_ID, '.'));
+        return (string)\substr($this->MODULE_ID, 0, \strpos($this->MODULE_ID, '.'));
     }
 
     /**
@@ -299,7 +315,7 @@ trait ModuleUtilsTrait
      */
     private function getModuleCode() : string
     {
-        return (string) \substr($this->MODULE_ID, \strpos($this->MODULE_ID, '.')+1);
+        return (string)\substr($this->MODULE_ID, \strpos($this->MODULE_ID, '.') + 1);
     }
 
     /**

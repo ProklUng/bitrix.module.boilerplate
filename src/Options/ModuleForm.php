@@ -3,6 +3,7 @@
 namespace ProklUng\Module\Boilerplate\Options;
 
 use Bitrix\Main\ArgumentNullException;
+use Bitrix\Main\ArgumentOutOfRangeException;
 use Bitrix\Main\Context;
 use Bitrix\Main\Event;
 use Bitrix\Main\HttpRequest;
@@ -123,7 +124,7 @@ class ModuleForm
      * Output options form.
      *
      * @return void
-     * @throws ArgumentNullException Когда что-то пошло не так.
+     * @throws ArgumentNullException | ArgumentOutOfRangeException Когда что-то пошло не так.
      */
     public function write(): void
     {

@@ -78,6 +78,8 @@ class ModuleManager
      * @param array  $tab An array of tab params.
      *
      * @return void
+     *
+     * @internal Формат $tab -> https://dev.1c-bitrix.ru/api_help/main/general/admin.section/rubric_edit.php.
      */
     public function addTab(string $id, array $tab): void
     {
@@ -104,8 +106,7 @@ class ModuleManager
      * @param string $name Option id.
      *
      * @return mixed option value
-     * @throws ArgumentOutOfRangeException
-     * @throws ArgumentNullException
+     * @throws ArgumentOutOfRangeException | ArgumentNullException
      */
     public function get(string $name)
     {
@@ -120,8 +121,7 @@ class ModuleManager
      * Get all module options values.
      *
      * @return array
-     * @throws ArgumentOutOfRangeException
-     * @throws ArgumentNullException
+     * @throws ArgumentOutOfRangeException | ArgumentNullException
      */
     public function getAll(): array
     {
@@ -139,9 +139,15 @@ class ModuleManager
      */
     public function getDefaults(): array
     {
-        return array_map(static function ($val) {
-            return $val['default'];
-        }, $this->optionFields);
+        return array_map(
+            /**
+             * @return mixed
+             */
+            static function (array $val) {
+                return $val['default'];
+            },
+            $this->optionFields
+        );
     }
 
     /**
@@ -178,8 +184,7 @@ class ModuleManager
      * Load module options values fallback to defaults.
      *
      * @return void
-     * @throws ArgumentOutOfRangeException
-     * @throws ArgumentNullException
+     * @throws ArgumentOutOfRangeException | ArgumentNullException
      */
     private function loadOptionValues(): void
     {
