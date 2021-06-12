@@ -78,10 +78,10 @@ class example_module extends CModule
 
 Менеджер модулей, зарегистрированных в системе посредством этого boilerplate.
 
-***showOptionsForm*** - вывод формы настроек модуля.
-***getOptionsManager*** - экземпляр класса `Options\ModuleManager`. Настройки модуля.
-***addModuleInstance($moduleObject)*** - Статика. Добавить экземпляр модуля. Объект, отнаследованный от `CModule`.
-***getModuleInstance(string $moduleId)*** - Статика. Получить экземпляр класса модуля по ID.
+- ***showOptionsForm*** - вывод формы настроек модуля.
+- ***getOptionsManager*** - экземпляр класса `Options\ModuleManager`. Настройки модуля.
+- ***addModuleInstance($moduleObject)*** - Статика. Добавить экземпляр модуля. Объект, отнаследованный от `CModule`.
+- ***getModuleInstance(string $moduleId)*** - Статика. Получить экземпляр класса модуля по ID.
 
 #### Опции модуля
 
