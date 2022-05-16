@@ -37,6 +37,13 @@ trait ModuleUtilsTrait
     protected $INSTALL_PATHS = [];
 
     /**
+     * @var string $INSTALL_SUBDIR Подпапка в /bitrix/admin, куда копируются файлы (если не задано
+     * $INSTALL_PATHS
+     * ).
+     */
+    protected $INSTALL_SUBDIR = '';
+
+    /**
      * @var string $MODULE_FULL_NAME
      */
     protected $MODULE_VENDOR = '';
@@ -182,6 +189,11 @@ trait ModuleUtilsTrait
             CopyDirFiles($components, Application::getDocumentRoot() . "/bitrix/components/{$this->getVendor()}/", true, true);
         }
 
+        $templates = $this->GetModuleDir().'/install/templates';
+        if (Directory::isDirectoryExists($templates)) {
+            CopyDirFiles($templates, Application::getDocumentRoot() . '/bitrix/templates/', true, true);
+        }
+
         // Files will be copied into /bitrix/admin/MODULE_ID/
         $files = $this->GetModuleDir().'/install/files';
         if (Directory::isDirectoryExists($files)) {
@@ -191,7 +203,7 @@ trait ModuleUtilsTrait
         // Если не указаны пути, то пытается по умолчанию рекурсивно копирнуть файлы из /install/admin
         if (count($this->INSTALL_PATHS) === 0) {
             $srcPath = $this->getModuleDir() . '/install/admin';
-            $destPath = $_SERVER['DOCUMENT_ROOT']. '/bitrix/admin/';
+            $destPath = $_SERVER['DOCUMENT_ROOT']. '/bitrix/admin/' . $this->INSTALL_SUBDIR;
             CopyDirFiles($srcPath, $destPath, true, true);
 
             return;
@@ -221,6 +233,16 @@ trait ModuleUtilsTrait
             Directory::deleteDirectory(Application::getDocumentRoot() . "/bitrix/admin/{$this->MODULE_ID}/");
         }
 
+        // Шаблоны
+        $templates = Application::getDocumentRoot() . "/bitrix/templates/{$this->getVendor()}/";
+        if (Directory::isDirectoryExists($templates)) {
+            Directory::deleteDirectory($templates);
+        }
+
+        if (count($this->INSTALL_PATHS) === 0 && $this->INSTALL_SUBDIR) {
+            Directory::deleteDirectory($_SERVER['DOCUMENT_ROOT']. '/bitrix/admin/' . $this->INSTALL_SUBDIR);
+        }
+
         foreach ($this->INSTALL_PATHS as $to) {
             if (is_file($_SERVER['DOCUMENT_ROOT'] . $to)) {
                 unlink($_SERVER['DOCUMENT_ROOT'] . $to);
@@ -228,7 +250,7 @@ trait ModuleUtilsTrait
             }
 
             if (is_dir($_SERVER['DOCUMENT_ROOT'] . $to)) {
-                $this->rrmdir($_SERVER['DOCUMENT_ROOT'] . $to);
+                Directory::deleteDirectory($_SERVER['DOCUMENT_ROOT'] . $to);
             }
         }
     }
@@ -264,30 +286,6 @@ trait ModuleUtilsTrait
     protected function getSchemaOptionsAdmin() : array
     {
         return [];
-    }
-
-    /**
-     * Рекурсивно удалить папки и файлы в них.
-     *
-     * @param string $dir Директория.
-     *
-     * @return void
-     */
-    private function rrmdir(string $dir) : void
-    {
-        if (is_dir($dir)) {
-            $objects = scandir($dir);
-            foreach ($objects as $object) {
-                if ($object !== '.' && $object !== '..') {
-                    if (is_dir($dir.DIRECTORY_SEPARATOR.$object) && !is_link($dir.'/'.$object)) {
-                        $this->rrmdir($dir.DIRECTORY_SEPARATOR.$object);
-                    } else {
-                        unlink($dir.DIRECTORY_SEPARATOR.$object);
-                    }
-                }
-            }
-            rmdir($dir);
-        }
     }
 
     /**
